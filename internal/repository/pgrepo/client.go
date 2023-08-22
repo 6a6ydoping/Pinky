@@ -10,6 +10,7 @@ import (
 )
 
 const usersTable = "users"
+const pictureTable = "pictures"
 
 type Postgres struct {
 	host     string

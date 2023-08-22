@@ -10,7 +10,7 @@ import (
 
 func (h *Handler) createPic(ctx *gin.Context) {
 	var pic entity.Picture
-	err := ctx.ShouldBindJSON(pic)
+	err := ctx.BindJSON(&pic)
 	if err != nil {
 		log.Printf("bind json err: %s \n", err.Error())
 		ctx.JSON(http.StatusBadRequest, &api.Error{
@@ -19,5 +19,6 @@ func (h *Handler) createPic(ctx *gin.Context) {
 		})
 		return
 	}
-
+	err = h.service.CreatePicture(ctx, &pic)
+	ctx.JSON(http.StatusOK, "OK")
 }
