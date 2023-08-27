@@ -8,5 +8,6 @@ func (h *Handler) InitRouter() *gin.Engine {
 	router := gin.Default()
 	apiV1 := router.Group("/api/v1")
 	apiV1.POST("/picture", h.createPic)
+	apiV1.GET("/picture", h.getPicturesByRange)
 	return router
 }

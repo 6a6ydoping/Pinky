@@ -7,4 +7,5 @@ import (
 
 type Repository interface {
 	CreatePicture(ctx context.Context, picture *entity.Picture) error
+	GetPicturesByRange(ctx context.Context, leftBound, rightBound uint) (*[]entity.Picture, error)
 }

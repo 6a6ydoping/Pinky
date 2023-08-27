@@ -6,6 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"log"
 	"net/http"
+	"strconv"
 )
 
 func (h *Handler) createPic(ctx *gin.Context) {
@@ -21,4 +22,40 @@ func (h *Handler) createPic(ctx *gin.Context) {
 	}
 	err = h.service.CreatePicture(ctx, &pic)
 	ctx.JSON(http.StatusOK, "OK")
+}
+
+func (h *Handler) getPicturesByRange(ctx *gin.Context) {
+	page := ctx.DefaultQuery("page", "1")
+
+	uintPageValue, err := strconv.ParseUint(page, 10, 64)
+	if err != nil {
+		log.Printf("Error convert any to string in getPictures handler\n")
+		ctx.JSON(http.StatusBadRequest, &api.Error{
+			Code:    -1,
+			Message: "Type error",
+		})
+		return
+	}
+
+	perPage := ctx.DefaultQuery("perPage", "10")
+	uintPerPageValue, err := strconv.ParseUint(perPage, 10, 64)
+	if err != nil {
+		log.Printf("Error convert any to string in getPictures handler\n")
+		ctx.JSON(http.StatusBadRequest, &api.Error{
+			Code:    -2,
+			Message: "Type error",
+		})
+		return
+	}
+
+	pictures, err := h.service.GetPictureByPage(ctx, uint(uintPageValue), uint(uintPerPageValue))
+	if err != nil {
+		log.Printf("Error get picture from database\n")
+		ctx.JSON(http.StatusBadRequest, &api.Error{
+			Code:    -3,
+			Message: err.Error(),
+		})
+		return
+	}
+	ctx.JSON(http.StatusOK, pictures)
 }

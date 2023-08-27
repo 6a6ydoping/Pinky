@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"errors"
 	"github.com/6a6ydoping/Pinky/internal/entity"
 	"time"
 )
@@ -14,4 +15,18 @@ func (m *Manager) CreatePicture(ctx context.Context, p *entity.Picture) error {
 		return err
 	}
 	return nil
+}
+
+func (m *Manager) GetPictureByPage(ctx context.Context, page, perPage uint) (*[]entity.Picture, error) {
+	if page == 0 {
+		return nil, errors.New("incorrect page value")
+	}
+	idsLeftBound := (page-1)*perPage + 1
+	idsRightBound := idsLeftBound + perPage - 1
+	pics, err := m.Repository.GetPicturesByRange(ctx, idsLeftBound, idsRightBound)
+	if err != nil {
+		return nil, err
+	}
+
+	return pics, nil
 }

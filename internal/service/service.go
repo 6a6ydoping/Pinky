@@ -12,6 +12,7 @@ type Service interface {
 
 type PictureService interface {
 	CreatePicture(ctx context.Context, picture *entity.Picture) error
+	GetPictureByPage(ctx context.Context, page, perPage uint) (*[]entity.Picture, error)
 }
 
 type UserService interface {
